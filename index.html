@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>羅馬鬥獸場介紹與細節圖片</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            /* ** 設置您提供的背景圖片 ** */
+            background-image: url('https://img.bigfang.tw/2023/05/1683228913-fac4ef5554f69012fe38d2f1d4e245a6.jpg'); 
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* 標題、簡介和導航按鈕容器 */
+        .header-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background-color: rgba(0, 0, 0, 0.85); 
+            padding: 20px 30px; border-radius: 10px; max-width: 80%;
+            z-index: 20; box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .introduction { font-size: 1.1em; margin-bottom: 20px; line-height: 1.6; text-align: justify; }
+        h1 { color: #ffcc00; font-size: 1.8em; margin: 0 0 10px 0; }
+        .vr-button {
+            padding: 12px 25px; font-size: 1.1em; font-weight: bold; color: #000;
+            background-color: #ffcc00; border: none; border-radius: 5px; text-decoration: none;
+            cursor: pointer; transition: background-color 0.3s; margin-top: 15px; display: inline-block;
+        }
+
+        /* 熱點樣式 */
+        .hotspot {
+            position: absolute; width: 35px; height: 35px; background-color: rgba(255, 0, 0, 0.9);
+            border: 3px solid white; border-radius: 50%; cursor: pointer; z-index: 10;
+            display: flex; justify-content: center; align-items: center; font-weight: bold;
+            font-size: 1.2em; line-height: 1; transition: transform 0.1s, background-color 0.3s; color: white;
+        }
+        .hotspot:hover { background-color: rgba(0, 200, 255, 0.9); transform: scale(1.1); }
+
+        /* 資訊彈窗樣式 */
+        .info-panel {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.98); color: white; padding: 25px;
+            border-radius: 10px; max-width: 90%; width: 450px; z-index: 100; display: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); border: 3px solid #ffcc00; text-align: left;
+            max-height: 90vh; 
+            overflow-y: auto; 
+        }
+        .info-panel h2 { margin-top: 0; color: #ffcc00; border-bottom: 1px solid #ffcc00; padding-bottom: 5px; }
+        .close-btn { float: right; cursor: pointer; font-size: 24px; font-weight: bold; color: white; margin-left: 10px; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 50; display: none; }
+        
+        /* 彈窗內的圖片樣式 */
+        #popup-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px 0 15px 0;
+            display: block; 
+        }
+
+        /* 手機優化 */
+        @media (max-width: 768px) {
+            .header-container { position: relative; top: auto; left: auto; transform: none; margin-top: 20px; margin-bottom: 20px; }
+            body { display: block; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 遮罩層 -->
+    <div id="overlay" onclick="closeInfo()"></div>
+
+    <!-- 標題、簡介和 360 度導覽按鈕 -->
+    <div class="header-container">
+        <h1>羅馬鬥獸場（Colosseo / Colosseum）</h1>
+        
+        <div class="introduction">
+            <p>羅馬鬥獸場是羅馬最具代表性的地標之一，原名弗拉維圓形劇場。它於西元 80 年竣工，能容納超過五萬人，主要用於舉辦盛大的角鬥士競賽和野獸狩獵。儘管經歷地震和人為破壞，但其殘餘的結構仍能展現古羅馬工程的宏偉與歷史的滄桑。</p>
+        </div>
+        
+        <a 
+            href="https://www.360cities.net/image/inside-colosseum-rome-italy?proj=normal_projection#670.00,90.00,120.0" 
+            target="_blank" 
+            class="vr-button">
+            前往外部 360° 虛擬導覽
+        </a>
+    </div>
+
+    <!-- 資訊彈窗 HTML -->
+    <div id="info-popup" class="info-panel">
+        <span class="close-btn" onclick="closeInfo()">X</span>
+        <h2 id="popup-title"></h2>
+        <!-- 圖片顯示位置 -->
+        <img id="popup-image" src="" alt="細節圖片">
+        <p id="popup-content"></p>
+    </div>
+
+    <!-- 可點擊的熱點 (Hotspots) -->
+    <!-- 請根據背景圖片手動調整 left 和 top 數值，讓熱點對應到您希望的位置 -->
+    
+    <!-- 熱點 1：興建歷史 -->
+    <div 
+        class="hotspot" 
+        style="left: 10%; top: 75%;" 
+        onclick="showInfo(
+            '興建歷史與地點', 
+            '鬥獸場建在尼祿暴君的「金色宮殿」（Domus Aurea）的人造湖上，目的是洗刷尼祿的惡名，將土地還給人民。',
+            'https://img.bigfang.tw/2023/05/1683228950-030d7e8e966169ab4c7f67c291c333f4.jpg'
+        )">
+        1
+    </div>
+
+    <!-- 熱點 2：外牆結構 -->
+    <div 
+        class="hotspot" 
+        style="left: 45%; top: 85%;" 
+        onclick="showInfo(
+            '外牆結構細節', 
+            '外牆共有三層拱門，第四層是實心牆體。拱門上原本設有精緻的雕塑裝飾。其建築技術是古羅馬的巔峰之作。',
+            'https://img.bigfang.tw/2023/05/1683228941-a269962fe1424e1ca3e68c328b9fed61.jpg'
+        )">
+        2
+    </div>
+    
+    <!-- 熱點 3：容量與活動 -->
+    <div 
+        class="hotspot" 
+        style="left: 85%; top: 70%;" 
+        onclick="showInfo(
+            '容量與活動', 
+            '鬥獸場能容納約 5 萬至 8 萬人。除了角鬥士競技，還會舉行模擬海戰（Naumachiae），將競技場注滿水。',
+            'https://img.bigfang.tw/2023/05/1683228983-e3e6f22244e557f1758d397a98734145.jpg'
+        )">
+        3
+    </div>
+
+    <script>
+        /**
+         * 顯示資訊彈窗、圖片和遮罩層
+         */
+        function showInfo(title, content, imageUrl) {
+            const popup = document.getElementById('info-popup');
+            const popupImage = document.getElementById('popup-image');
+            
+            document.getElementById('popup-title').innerText = title;
+            document.getElementById('popup-content').innerText = content;
+            
+            // 設定圖片來源
+            popupImage.src = imageUrl;
+            popupImage.alt = title + '圖片';
+
+            popup.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        /**
+         * 關閉資訊彈窗和遮罩層
+         */
+        function closeInfo() {
+            document.getElementById('info-popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeInfo();
+            }
+        });
+    </script>
+
+</body>
+</html>
